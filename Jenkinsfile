@@ -12,8 +12,6 @@ node('master') {
     def dockerImage = 'maven:slim'
      docker.image(dockerImage).inside("-v ${WORKSPACE}:/root ") {
       sh " 'mvn' -Dmaven.test.failure.ignore clean install "
-      sh " ping soanrqube "
-   
    }
-}
-}
+  }
+  }
