@@ -9,4 +9,8 @@ node('master') {
    
    }
     }    
+    stage (' sonar ') {
+    def dockerImage = 'sonarqube'
+     docker.image(dockerImage).inside("-v ${WORKSPACE}:/root ") {
+      sh " 'mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar" 
     }
