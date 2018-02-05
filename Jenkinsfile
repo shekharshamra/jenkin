@@ -1,5 +1,5 @@
 node('master') {
-    stage ( git checkout ) {
+    stage ( 'git checkout' ) {
        git 'https://github.com/shekharshamra/jenkin.git' 
     }
     stage ('docker') {
