@@ -1,10 +1,10 @@
 node('master') {
     stage ('docker') {
-    def dockerImage = 'nginx:alpine'
+    def dockerImage = 'maven:slim'
     checkout scm
     docker.image(dockerImage).inside {
-        sh "cat /etc/hosts "
-       
+        sh " 'mvn' -Dmaven.test.failure.ignore clean install "
+   
    }
     }    
     }
