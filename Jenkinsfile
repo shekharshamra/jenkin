@@ -1,9 +1,11 @@
 node('master') {
+    stage ( git checkout ) {
+        checkout scm 
+    }
     stage ('docker') {
     def dockerImage = 'maven:slim'
-    checkout scm
-    docker.image(dockerImage).inside {
-        sh " 'mvn' -Dmaven.test.failure.ignore clean install "
+     docker.image(dockerImage).inside {
+     #   sh " 'mvn' -Dmaven.test.failure.ignore clean install "
    
    }
     }    
