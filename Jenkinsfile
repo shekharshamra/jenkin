@@ -12,6 +12,7 @@ node('master') {
     def dockerImage = 'maven:slim'
      docker.image(dockerImage).inside("-v ${WORKSPACE}:/root ") {
       sh " 'mvn' -Dmaven.test.failure.ignore clean install "
+      sh " 'mvn' -Dmaven.test.failure.ignore sonar:sonar -Dsonar.host.url=http://172.17.0.1:9000
    }
   }
     stage ('clean') {
