@@ -14,4 +14,7 @@ node('master') {
       sh " 'mvn' -Dmaven.test.failure.ignore clean install "
    }
   }
+    stage ('clean') {
+     sh " docker rm -f soanrqube "
   }
+}
