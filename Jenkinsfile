@@ -6,7 +6,7 @@ node('master') {
        def dockerImage = 'sonarqube:7.0-alpine'
        def host_port = '9091'
         def sonarqube_port = '9000'
-        sh " docker run -d -p ${host_port}:${sonarqube_port} --name=soanrqube ${dockerImage} " 
+        sh " docker run -d --name=soanrqube ${dockerImage} " 
     }
    stage ('maven') {
     def dockerImage = 'maven:slim'
