@@ -14,6 +14,8 @@ node('master') {
       archive 'target/*.jar'
    }
       stage('SonarQube analysis') {
+       def mvnHome
+        mvnHome = tool 'M2_HOME'
       withSonarQubeEnv('sonarqube') {
       // requires SonarQube Scanner for Maven 3.2+
        sh "'${mvnHome}/bin/mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
