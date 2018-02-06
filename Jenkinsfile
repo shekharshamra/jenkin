@@ -7,12 +7,16 @@ node('master') {
      def dockerImage = 'maven:slim'
       docker.image(dockerImage).inside("-v ${WORKSPACE}:/root ") {
       sh " 'mvn' -Dmaven.test.failure.ignore clean install "
-      sh " 'mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar -Dsonar.host.url=http://172.17.0.1:9000 "
-   }
+      }
   } 
-       stage (' junit'){
+      stage (' junit'){
       junit '**/target/surefire-reports/TEST-*.xml'
       archive 'target/*.jar'
-   } 
-         
+   }
+      stage('SonarQube analysis') {
+      withSonarQubeEnv('sonarqube') {
+      // requires SonarQube Scanner for Maven 3.2+
+       sh "'${mvnHome}/bin/mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
+      }
+      }
 }
