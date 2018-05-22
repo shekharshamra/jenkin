@@ -14,11 +14,15 @@ node('master') {
       archive 'target/*.jar'
    }
       stage('SonarQube analysis') {
-       def mvnHome
-        mvnHome = tool 'mvn'
-      withSonarQubeEnv('sonarqube') {
-      // requires SonarQube Scanner for Maven 3.2+
-       sh "'${mvnHome}/bin/mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
+       sh " if git rev-parse ${mvn_version} ;the 
+               echo "Found ${mvn_version} tag"
+	           exit 1
+             else
+                echo "create tag for ${mvn_version}"
+                      git tag ${mvn_version}
+                      git push origin ${mvn_version}
+                      fi "
       }
       }
+     
 }
