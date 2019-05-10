@@ -9,7 +9,7 @@ pipeline
             {
                 withMaven(maven : 'MAVEN_PIPELINE')
                 {
-                    sh 'mvn clean compile'
+                    sh 'mvn clean install
                 }
             }
         }
