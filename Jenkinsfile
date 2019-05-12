@@ -1,24 +1,26 @@
-node('master') {
-    stage ( 'git checkout' ) {
-       git 'https://github.com/shekharshamra/jenkin.git' 
-    }
-    
-     stage ('maven') {
-     def dockerImage = 'maven:slim'
-      docker.image(dockerImage).inside("-v ${WORKSPACE}:/root ") {
-      sh " 'mvn' -Dmaven.test.failure.ignore clean install "
-      }
-  } 
-      stage (' junit'){
-      junit '**/target/surefire-reports/TEST-*.xml'
-      archive 'target/*.jar'
+node {
+   def mvnHome
+   stage('Preparation') { // for display purposes
+      // Get some code from a GitHub repository
+      git 'https://github.com/shekharshamra/jenkin.git'
+      // Get the Maven tool.
+      // ** NOTE: This 'M3' Maven tool must be configured
+      // **       in the global configuration.           
+      mvnHome = tool 'mvn'
    }
-      stage('SonarQube analysis') {
-       def mvnHome
-        mvnHome = tool 'mvn'
-      withSonarQubeEnv('sonarqube') {
-      // requires SonarQube Scanner for Maven 3.2+
-       sh "'${mvnHome}/bin/mvn' org.sonarsource.scanner.maven:sonar-maven-plugin:3.2:sonar"
+   stage('Build') {
+      // Run the maven build
+      if (isUnix()) {
+         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean install"
+      } else {
+         bat(/"${mvnHome}\bin\mvn" -Dmaven.test.failure.ignore clean package/)
       }
-      }
-}
+   }
+   stage('Results') {
+      junit '**/target/surefire-reports/TEST-*.xml'
+      archiveArtifacts 'in28minutes-web-servlet-jsp/target/*.war'
+   }
+   stage('Deployment') {
+      sh 'scp  /root/.jenkins/workspace/scripted-pipeline/in28minutes-web-servlet-jsp/target/*.war centos@10.17.2.254:/opt/apache-tomcat-7.0.61/webapps/'
+   }
+   }
