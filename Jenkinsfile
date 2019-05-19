@@ -17,11 +17,11 @@ pipeline {
         }
     }
 
-          stage('deployment stage') {
-              steps {
-                sh "mvn deploy"
+        stage('Deploy'){
+            step {
+                sh 'scp -r /root/.jenkins/workspace/decl-pipeline/in28minutes-web-servlet-jsp/target/*.war root@172.31.2.123:/opt/apache-tomcat-8.5.40/webapps/'
+            }
         }
-    }
 
   }
 
